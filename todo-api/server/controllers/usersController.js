@@ -1,5 +1,4 @@
 import express from 'express';
-import { ObjectID } from 'mongodb';
 import _ from 'lodash';
 
 import User from '../models/UserModel';
@@ -7,19 +6,14 @@ import User from '../models/UserModel';
 const router = express.Router();
 
 router.post('/', (req, res) => {
-  const { email, password } = req.body;
+  const body = _.pick(req.body, ['email', 'password']);
 
-  const user = new User({
-    email,
-    password,
-    tokens: [{
-      access: 'auth',
-      token: 'placeholder'
-    }]
-  });
+  const user = new User(body);
 
-  user.save().then((doc) => {
-    res.send(doc);
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
   }).catch((e) => {
     res.status(400).send(e);
   });

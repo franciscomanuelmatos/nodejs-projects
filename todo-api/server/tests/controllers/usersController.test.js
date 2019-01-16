@@ -1,5 +1,4 @@
 import request from 'supertest';
-import { ObjectID } from 'mongodb';
 
 import app from '../../server';
 
@@ -32,7 +31,6 @@ describe('POST /users', () => {
       .expect(200)
       .expect((res) => {
         expect(res.body.email).toBe(email);
-        expect(res.body.password).toBe(password)
       })
       .end((err, res) => {
         if (err) {
@@ -41,7 +39,6 @@ describe('POST /users', () => {
         User.find({ email }).then((users) => {
           expect(users.length).toBe(1);
           expect(users[0].email).toBe(email);
-          expect(users[0].password).toBe(password);
           expect(users[0].tokens[0].token).toBeDefined();
           done();
         }).catch((e) => done(e));
