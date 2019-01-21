@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
+import bcrypt from'bcryptjs';
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -70,6 +71,8 @@ UserSchema.statics.findByToken = function (token) {
     'tokens.access': 'auth'
    });
 }
+
+
 
 const UserModel = mongoose.model('User', UserSchema);
 
